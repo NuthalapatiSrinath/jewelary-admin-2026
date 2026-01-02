@@ -1,23 +1,22 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --color-primary: #2563eb;
-  --bg-color: #f8f9fa;
-  --text-color: #1e293b;
+  --bg-light: #f8f9fa;
+  --bg-dark: #0f172a; /* Slate 900 */
+}
+
+/* Smooth Theme Transition */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom Scrollbar for Tables */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -29,13 +28,6 @@ body {
   background: #cbd5e1;
   border-radius: 4px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Glassmorphism Utility Class */
-.glass-effect {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
 }

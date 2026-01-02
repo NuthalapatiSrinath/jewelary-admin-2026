@@ -5,18 +5,20 @@ import Header from "./Header";
 
 const Layout = () => {
   return (
-    <div className="flex min-h-screen bg-[#f8f9fa]">
-      {/* Sidebar (Fixed Left) */}
+    <div className="flex min-h-screen bg-[#f8f9fa] dark:bg-slate-950 transition-colors duration-300">
+      {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Content Area */}
+      {/* Main Wrapper */}
       <div className="flex-1 ml-64 flex flex-col min-h-screen">
-        {/* Header (Fixed Top) */}
+        {/* Header */}
         <Header />
 
-        {/* Dynamic Page Content */}
-        <main className="flex-1 p-8 mt-16 overflow-y-auto">
-          <Outlet />
+        {/* Page Content */}
+        <main className="flex-1 p-6 mt-16 overflow-y-auto">
+          <div className="max-w-[1920px] mx-auto">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
