@@ -1,43 +1,116 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { UserCircle, Sun, Moon } from "lucide-react";
-import { toggleTheme } from "../store/slices/themeSlice"; // Import action
+import { useNavigate, useLocation } from "react-router-dom";
+import { Menu, Moon, Sun, LogOut, Gem } from "lucide-react";
+import toast from "react-hot-toast";
 
-const Header = () => {
-  const { user } = useSelector((state) => state.auth);
-  const { mode } = useSelector((state) => state.theme); // Get theme state
-  const dispatch = useDispatch();
+const Header = ({ onMenuClick, theme, toggleTheme }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // --- Route Mapping (Based on your AppRoutes.jsx) ---
+  // We define the titles here to match the paths in your router
+  const routeConfig = {
+    "/": "Dashboard Overview",
+    "/staff": "Staff Management",
+    "/locations": "Location Manager",
+    "/settings": "System Settings",
+    "/login": "Login",
+  };
+
+  // Get current title or default to 'Dashboard'
+  const pageTitle = routeConfig[location.pathname] || "Dashboard";
+
+  // --- User Data Logic ---
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : {};
+  const userName = user.firstName || "Admin";
+  const userRole = user.role || "Manager";
+  const userInitial = userName.charAt(0).toUpperCase();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("isAuthenticated");
+    toast.success("Logged out successfully");
+    navigate("/login", { replace: true });
+  };
 
   return (
     <header
-      className="h-16 fixed top-0 right-0 left-64 z-40 px-8 flex items-center justify-between transition-all duration-300
-      bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200"
+      className="
+      sticky top-0 z-30 
+      flex items-center justify-between 
+      h-14 md:h-header-h 
+      px-4 md:px-8 
+      bg-white/80 dark:bg-slate-900/80 backdrop-blur-md 
+      border-b border-slate-200 dark:border-slate-800
+      shadow-sm
+      transition-all duration-300
+    "
     >
-      <h2 className="text-lg font-semibold">
-        Welcome back, {user?.name || "Admin"}
-      </h2>
-
+      {/* Left Side */}
       <div className="flex items-center gap-4">
-        {/* Theme Toggle Button */}
+        {/* Mobile Hamburger */}
         <button
-          onClick={() => dispatch(toggleTheme())}
-          className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-          title="Toggle Theme"
+          onClick={onMenuClick}
+          className="p-2 text-slate-500 hover:bg-slate-100 hover:text-amber-600 rounded-lg transition-colors lg:hidden"
         >
-          {mode === "dark" ? (
-            <Sun className="w-5 h-5 text-amber-400" />
+          <Menu className="w-6 h-6" />
+        </button>
+
+        <div className="hidden md:flex items-center gap-2">
+          {/* Context Icon (Jewelry Theme) */}
+          <div className="bg-amber-100 dark:bg-amber-900/30 p-1.5 rounded-md text-amber-600 dark:text-amber-400">
+            <Gem className="w-4 h-4" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-800 dark:text-white transition-all duration-300 tracking-tight">
+            {pageTitle}
+          </h2>
+        </div>
+      </div>
+
+      {/* Right Side */}
+      <div className="flex items-center gap-2 md:gap-4">
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="p-2 md:p-2.5 rounded-full text-slate-500 hover:bg-slate-100 hover:text-amber-600 dark:text-slate-400 dark:hover:bg-slate-800 transition-all active:scale-95"
+        >
+          {theme === "dark" ? (
+            <Sun className="w-5 h-5" />
           ) : (
-            <Moon className="w-5 h-5 text-indigo-600" />
+            <Moon className="w-5 h-5" />
           )}
         </button>
 
+        {/* Divider */}
+        <div className="h-6 md:h-8 w-[1px] bg-slate-200 dark:bg-slate-700 mx-1 hidden sm:block"></div>
+
         {/* User Profile */}
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700">
-          <UserCircle className="w-5 h-5 text-slate-400" />
-          <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-            Admin
-          </span>
+        <div className="flex items-center gap-2 md:gap-3 group cursor-pointer">
+          {/* User Avatar with Jewelry Gold Gradient */}
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-amber-400 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-xs md:text-sm shadow-md shadow-amber-500/30 group-hover:shadow-lg group-hover:shadow-amber-500/40 transition-all transform group-hover:scale-105">
+            {userInitial}
+          </div>
+
+          <div className="hidden lg:block leading-tight">
+            <p className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-amber-600 transition-colors">
+              {userName}
+            </p>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+              {userRole}
+            </p>
+          </div>
         </div>
+
+        {/* Logout */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center justify-center p-2 md:p-2.5 text-red-500 bg-red-50 hover:bg-red-500 hover:text-white rounded-full transition-all duration-300 ml-1 md:ml-2 shadow-sm hover:shadow-red-200"
+          title="Logout"
+        >
+          <LogOut className="w-4 h-4 md:w-5 md:h-5" />
+        </button>
       </div>
     </header>
   );
