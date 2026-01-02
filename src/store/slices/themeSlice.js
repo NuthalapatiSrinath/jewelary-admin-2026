@@ -12,7 +12,7 @@ const themeSlice = createSlice({
       state.mode = state.mode === "light" ? "dark" : "light";
       localStorage.setItem("theme", state.mode);
 
-      // Update the DOM immediately
+      // Apply class immediately
       if (state.mode === "dark") {
         document.documentElement.classList.add("dark");
       } else {
