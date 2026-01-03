@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create axios instance pointing to your backend
 const api = axios.create({
-  baseURL: "http://localhost:5000/api", // Make sure your backend runs on this port
+  baseURL: "https://jewellary-backend-topaz.vercel.app/api", // Make sure your backend runs on this port
   headers: {
     "Content-Type": "application/json",
   },
