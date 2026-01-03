@@ -101,7 +101,7 @@ const Login = () => {
             </motion.div>
 
             <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 to-purple-200 tracking-tight mb-2">
-              Luxe Admin
+              ARRA Jewels
             </h1>
             <p className="text-slate-400 text-sm">
               Secure Authentication Required

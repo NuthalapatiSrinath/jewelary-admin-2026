@@ -13,8 +13,6 @@ import {
 
 // Components
 import DataTable from "../../components/common/DataTable";
-
-// --- CHANGED IMPORTS ---
 import AddDiamondModal from "../../components/modals/diamonds/AddDiamondModal";
 import EditDiamondModal from "../../components/modals/diamonds/EditDiamondModal";
 import DeleteDiamondModal from "../../components/modals/diamonds/DeleteDiamondModal";
@@ -31,7 +29,6 @@ import {
   Gem,
   Video,
   Link as LinkIcon,
-  Image as ImageIcon,
 } from "lucide-react";
 
 const Diamonds = () => {
@@ -51,10 +48,11 @@ const Diamonds = () => {
     clarity: "",
   });
 
-  // Separate Modal States for better control
+  // --- CORRECT MODAL STATES ---
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const [selectedDiamond, setSelectedDiamond] = useState(null);
   const [processingIds, setProcessingIds] = useState(new Set());
 
@@ -78,7 +76,22 @@ const Diamonds = () => {
       page: 1,
     }));
 
-  // Handlers
+  // --- FIXED HANDLERS ---
+  const handleAdd = () => {
+    setSelectedDiamond(null);
+    setIsAddOpen(true); // ✅ Fixed: Sets the correct state
+  };
+
+  const handleEditClick = (diamond) => {
+    setSelectedDiamond(diamond);
+    setIsEditOpen(true); // ✅ Fixed: Sets the correct state
+  };
+
+  const handleDeleteClick = (diamond) => {
+    setSelectedDiamond(diamond);
+    setIsDeleteOpen(true);
+  };
+
   const handleSaveCreate = async (data) => {
     const res = await dispatch(createDiamond(data));
     if (!res.error) {
@@ -97,16 +110,6 @@ const Diamonds = () => {
       setSelectedDiamond(null);
       dispatch(fetchDiamonds(queryParams));
     }
-  };
-
-  const handleEditClick = (diamond) => {
-    setSelectedDiamond(diamond);
-    setIsEditOpen(true);
-  };
-
-  const handleDeleteClick = (diamond) => {
-    setSelectedDiamond(diamond);
-    setIsDeleteOpen(true);
   };
 
   const confirmDelete = async (id) => {
@@ -167,7 +170,6 @@ const Diamonds = () => {
     XLSX.writeFile(wb, "diamond_upload_template.xlsx");
   };
 
-  // --- Expanded Row ---
   const renderExpandedRow = (row) => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-600 bg-slate-50/80 p-5 rounded-lg border border-slate-100 shadow-inner">
       <div>
@@ -246,7 +248,6 @@ const Diamonds = () => {
     </div>
   );
 
-  // --- Columns ---
   const columns = [
     {
       header: "Image",
@@ -538,7 +539,7 @@ const Diamonds = () => {
                 />
               </label>
               <button
-                onClick={() => setIsAddOpen(true)}
+                onClick={handleAdd}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 h-10 rounded-lg text-sm font-medium flex items-center gap-2 transition-all shadow-lg active:scale-95"
               >
                 <Plus className="w-4 h-4" />{" "}

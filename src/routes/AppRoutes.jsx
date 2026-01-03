@@ -5,97 +5,117 @@ import { useSelector } from "react-redux";
 // Layouts
 import Layout from "../layouts/Layout";
 
-// Pages
+// Pages (Implemented)
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import NotFound from "../pages/NotFound";
 import Diamonds from "../pages/admin/Diamonds";
+import Metals from "../pages/admin/Metals";
+import Products from "../pages/admin/Products";
+import ProductVariants from "../pages/admin/ProductVariants";
+import Orders from "../pages/admin/Orders";
+import Coupons from "../pages/admin/Coupons";
+import Images from "../pages/admin/Images";
+import Contacts from "../pages/admin/Contacts";
 
-// Placeholder for missing pages (Prevents crashes)
+// Placeholder for missing pages
 const Placeholder = ({ title }) => (
   <div className="p-6">
-    <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
-    <p className="text-slate-500 mt-2">This module is under development.</p>
+    <div className="bg-white rounded-xl border border-slate-200 p-8 flex flex-col items-center justify-center text-center h-[60vh]">
+      <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+        <span className="text-2xl">🚧</span>
+      </div>
+      <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
+      <p className="text-slate-500 mt-2 max-w-md">
+        This module is currently under development. Check back later for
+        updates.
+      </p>
+    </div>
   </div>
 );
 
-// --- 1. DEFINE ROUTES & TITLES HERE ---
+// --- ROUTE CONFIGURATION ---
+// These paths match exactly with the 'to' props in your Sidebar.jsx
 export const appRoutes = [
-  // Overview
-  { path: "/", element: <Dashboard />, title: "Dashboard Overview" },
+  // --- Overview ---
   {
-    path: "/inventory/products",
+    path: "/",
+    element: <Dashboard />,
+    title: "Dashboard Overview",
+  },
+
+  // --- Catalog ---
+  {
+    path: "/diamonds",
     element: <Diamonds />,
     title: "Diamond Inventory",
   },
-
-  // Inventory
   {
-    path: "/inventory/products",
-    element: <Placeholder title="Product Catalog" />,
-    title: "Product Catalog",
+    path: "/metals",
+    element: <Metals />,
+    title: "Metal Rates",
   },
   {
-    path: "/inventory/categories",
+    path: "/products",
+    element: <Products />,
+    title: "All Products",
+  },
+  {
+    path: "/products/:productId/variants",
+    element: <ProductVariants />,
+    title: "Manage Variants",
+  },
+  {
+    path: "/categories",
     element: <Placeholder title="Categories" />,
     title: "Category Management",
   },
+
+  // --- Sales ---
   {
-    path: "/inventory/stock",
-    element: <Placeholder title="Stock Adjustment" />,
-    title: "Stock Management",
+    path: "/orders",
+    element: <Orders />,
+    title: "Sales Orders",
+  },
+  {
+    path: "/coupons",
+    element: <Coupons />,
+    title: "Coupon Management",
   },
 
-  // Business Logic
+  // --- Content ---
   {
-    path: "/gold-rates",
-    element: <Placeholder title="Gold Rates" />,
-    title: "Daily Gold Rates",
+    path: "/banners",
+    element: <Placeholder title="Banner Management" />,
+    title: "Website Banners",
   },
   {
-    path: "/suppliers",
-    element: <Placeholder title="Suppliers" />,
-    title: "Supplier Directory",
+    path: "/images",
+    element: <Images />,
+    title: "Image Gallery",
   },
 
-  // Sales
-  {
-    path: "/orders/new",
-    element: <Placeholder title="New Order" />,
-    title: "Create New Order",
-  },
+  // --- Users ---
   {
     path: "/customers",
-    element: <Placeholder title="Customers" />,
-    title: "Customer Database",
+    element: <Contacts />,
+    title: "Customers",
   },
 
-  // Management
-  {
-    path: "/finance/transactions",
-    element: <Placeholder title="Transactions" />,
-    title: "Financial Transactions",
-  },
-  {
-    path: "/staff",
-    element: <Placeholder title="Staff" />,
-    title: "Staff & Karigars",
-  },
-  {
-    path: "/reports",
-    element: <Placeholder title="Reports" />,
-    title: "Business Reports",
-  },
-
-  // System
+  // --- System ---
   {
     path: "/settings",
-    element: <Placeholder title="Settings" />,
-    title: "System Settings",
+    element: <Placeholder title="System Settings" />,
+    title: "Settings",
+  },
+  {
+    path: "/support",
+    element: <Placeholder title="Support Center" />,
+    title: "Support",
   },
 ];
 
-// --- 2. ROUTE COMPONENTS ---
+// --- AUTH GUARDS ---
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -109,9 +129,12 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
+// --- MAIN COMPONENT ---
+
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* Public Login Route */}
       <Route
         path="/login"
         element={
@@ -121,6 +144,7 @@ const AppRoutes = () => {
         }
       />
 
+      {/* Protected Admin Routes */}
       <Route
         path="/"
         element={
@@ -129,12 +153,13 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
-        {/* Generates routes automatically from the list above */}
+        {/* Map all defined routes */}
         {appRoutes.map((route, index) => (
           <Route key={index} path={route.path} element={route.element} />
         ))}
       </Route>
 
+      {/* 404 Route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

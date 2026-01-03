@@ -17,7 +17,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop (Fades in/out) */}
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -26,7 +26,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm cursor-pointer"
           />
 
-          {/* Modal Content (Scales in/out) */}
+          {/* Modal Content */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}

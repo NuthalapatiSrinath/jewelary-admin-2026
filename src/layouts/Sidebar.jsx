@@ -3,44 +3,37 @@ import { NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 import {
-  LayoutDashboard,
-  Gem, // Jewelry Item
-  Coins, // Gold Rates
+  Gem, // Diamonds
   ShoppingCart, // Orders
   Users, // Customers
-  UserCheck, // Staff/Karigars
-  CreditCard, // Payments
-  FileBarChart, // Reports
-  Settings,
   LogOut,
   X,
   ChevronRight,
-  Package,
-  Tags,
-  Store,
-  Truck,
-  HelpCircle,
+  Package, // Products
+  Image as ImageIcon, // Media Library
 } from "lucide-react";
 
 const Sidebar = ({ isOpen, isMobile, onClose }) => {
   const location = useLocation();
 
   const [openMenus, setOpenMenus] = useState({
-    inventory: false,
-    orders: false,
-    finance: false,
+    catalog: false,
+    sales: false,
   });
 
   // Auto expand menu based on active route
   useEffect(() => {
-    if (location.pathname.startsWith("/inventory")) {
-      setOpenMenus((p) => ({ ...p, inventory: true }));
+    const path = location.pathname;
+    if (
+      path.startsWith("/diamonds") ||
+      path.startsWith("/metals") ||
+      path.startsWith("/products") ||
+      path.startsWith("/categories")
+    ) {
+      setOpenMenus((p) => ({ ...p, catalog: true }));
     }
-    if (location.pathname.startsWith("/orders")) {
-      setOpenMenus((p) => ({ ...p, orders: true }));
-    }
-    if (location.pathname.startsWith("/finance")) {
-      setOpenMenus((p) => ({ ...p, finance: true }));
+    if (path.startsWith("/orders") || path.startsWith("/coupons")) {
+      setOpenMenus((p) => ({ ...p, sales: true }));
     }
   }, [location.pathname]);
 
@@ -88,9 +81,13 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
       <aside className={sidebarClasses}>
         {/* HEADER */}
         <div className="h-14 md:h-header-h flex items-center px-5 border-b border-slate-200 dark:border-slate-800 shrink-0 gap-3 bg-white dark:bg-slate-900 relative">
-          {/* Icon Logo (Always visible) */}
-          <div className="w-10 h-10 flex items-center justify-center bg-amber-100 dark:bg-amber-900/30 text-amber-600 rounded-lg shrink-0">
-            <Gem className="w-6 h-6" />
+          {/* Logo Image */}
+          <div className="w-10 h-10 flex items-center justify-center shrink-0">
+            <img
+              src="/logo.png"
+              alt="Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
 
           {/* Text Logo */}
@@ -99,12 +96,12 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
               isMobile ? "block" : "hidden group-hover:block"
             }`}
           >
-            <span className="font-bold text-lg text-slate-800 dark:text-white leading-none">
-              Luxe Gold
+            <span className="font-bold text-lg text-slate-800 dark:text-white leading-none uppercase">
+              ARRA JEWELS
             </span>
-            <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">
+            {/* <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">
               Admin Panel
-            </span>
+            </span> */}
           </div>
 
           {/* Mobile close button */}
@@ -121,26 +118,9 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
         {/* NAVIGATION */}
         <nav className="flex-1 px-2 py-6 overflow-y-auto no-scrollbar">
           <ul className="space-y-1">
-            {/* Overview Section */}
+            {/* Catalog Section */}
             <li
-              className={`px-4 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 mt-1 ${
-                isMobile ? "block" : "hidden group-hover:block"
-              }`}
-            >
-              Overview
-            </li>
-
-            <NavItem
-              to="/"
-              icon={LayoutDashboard}
-              label="Dashboard"
-              onClick={handleLinkClick}
-              isMobile={isMobile}
-            />
-
-            {/* Inventory Section */}
-            <li
-              className={`px-4 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 mt-6 ${
+              className={`px-4 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 mt-2 ${
                 isMobile ? "block" : "hidden group-hover:block"
               }`}
             >
@@ -151,46 +131,41 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
               <MenuButton
                 label="Inventory"
                 icon={Package}
-                isOpen={openMenus.inventory}
-                isActive={isActiveParent(["/inventory"])}
-                onClick={() => toggleMenu("inventory")}
+                isOpen={openMenus.catalog}
+                isActive={isActiveParent([
+                  "/diamonds",
+                  "/metals",
+                  "/products",
+                  "/categories",
+                ])}
+                onClick={() => toggleMenu("catalog")}
                 isMobile={isMobile}
               />
-              <SubMenu isOpen={openMenus.inventory} isMobile={isMobile}>
+              <SubMenu isOpen={openMenus.catalog} isMobile={isMobile}>
                 <SubNavItem
-                  to="/inventory/products"
+                  to="/diamonds"
+                  label="Diamonds"
+                  onClick={handleLinkClick}
+                />
+                <SubNavItem
+                  to="/metals"
+                  label="Metals & Rates"
+                  onClick={handleLinkClick}
+                />
+                <SubNavItem
+                  to="/products"
                   label="All Products"
                   onClick={handleLinkClick}
                 />
                 <SubNavItem
-                  to="/inventory/categories"
+                  to="/categories"
                   label="Categories"
-                  onClick={handleLinkClick}
-                />
-                <SubNavItem
-                  to="/inventory/stock"
-                  label="Stock Adjustment"
                   onClick={handleLinkClick}
                 />
               </SubMenu>
             </li>
 
-            <NavItem
-              to="/gold-rates"
-              icon={Coins}
-              label="Gold Rates"
-              onClick={handleLinkClick}
-              isMobile={isMobile}
-            />
-            <NavItem
-              to="/suppliers"
-              icon={Truck}
-              label="Suppliers"
-              onClick={handleLinkClick}
-              isMobile={isMobile}
-            />
-
-            {/* Sales & Orders */}
+            {/* Sales Section */}
             <li
               className={`px-4 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 mt-6 ${
                 isMobile ? "block" : "hidden group-hover:block"
@@ -201,119 +176,57 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
 
             <li>
               <MenuButton
-                label="Orders"
+                label="Sales & Offers"
                 icon={ShoppingCart}
-                isOpen={openMenus.orders}
-                isActive={isActiveParent(["/orders"])}
-                onClick={() => toggleMenu("orders")}
+                isOpen={openMenus.sales}
+                isActive={isActiveParent(["/orders", "/coupons"])}
+                onClick={() => toggleMenu("sales")}
                 isMobile={isMobile}
               />
-              <SubMenu isOpen={openMenus.orders} isMobile={isMobile}>
+              <SubMenu isOpen={openMenus.sales} isMobile={isMobile}>
                 <SubNavItem
-                  to="/orders/new"
-                  label="New Orders"
+                  to="/orders"
+                  label="Orders"
                   onClick={handleLinkClick}
                 />
                 <SubNavItem
-                  to="/orders/custom"
-                  label="Custom Orders"
-                  onClick={handleLinkClick}
-                />
-                <SubNavItem
-                  to="/orders/repairs"
-                  label="Repairs"
+                  to="/coupons"
+                  label="Coupons"
                   onClick={handleLinkClick}
                 />
               </SubMenu>
+            </li>
+
+            {/* Content & Media */}
+            <li
+              className={`px-4 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 mt-6 ${
+                isMobile ? "block" : "hidden group-hover:block"
+              }`}
+            >
+              Content
+            </li>
+
+            <NavItem
+              to="/images"
+              icon={ImageIcon}
+              label="Media Library"
+              onClick={handleLinkClick}
+              isMobile={isMobile}
+            />
+
+            {/* Users */}
+            <li
+              className={`px-4 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 mt-6 ${
+                isMobile ? "block" : "hidden group-hover:block"
+              }`}
+            >
+              Users
             </li>
 
             <NavItem
               to="/customers"
               icon={Users}
               label="Customers"
-              onClick={handleLinkClick}
-              isMobile={isMobile}
-            />
-
-            {/* Management & Finance */}
-            <li
-              className={`px-4 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 mt-6 ${
-                isMobile ? "block" : "hidden group-hover:block"
-              }`}
-            >
-              Management
-            </li>
-
-            <li>
-              <MenuButton
-                label="Finance"
-                icon={CreditCard}
-                isOpen={openMenus.finance}
-                isActive={isActiveParent(["/finance"])}
-                onClick={() => toggleMenu("finance")}
-                isMobile={isMobile}
-              />
-              <SubMenu isOpen={openMenus.finance} isMobile={isMobile}>
-                <SubNavItem
-                  to="/finance/transactions"
-                  label="Transactions"
-                  onClick={handleLinkClick}
-                />
-                <SubNavItem
-                  to="/finance/invoices"
-                  label="Invoices"
-                  onClick={handleLinkClick}
-                />
-                <SubNavItem
-                  to="/finance/expenses"
-                  label="Expenses"
-                  onClick={handleLinkClick}
-                />
-              </SubMenu>
-            </li>
-
-            <NavItem
-              to="/staff"
-              icon={UserCheck}
-              label="Staff / Karigars"
-              onClick={handleLinkClick}
-              isMobile={isMobile}
-            />
-            <NavItem
-              to="/reports"
-              icon={FileBarChart}
-              label="Reports"
-              onClick={handleLinkClick}
-              isMobile={isMobile}
-            />
-            <NavItem
-              to="/showrooms"
-              icon={Store}
-              label="Showrooms"
-              onClick={handleLinkClick}
-              isMobile={isMobile}
-            />
-
-            {/* System */}
-            <li
-              className={`px-4 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 mt-6 ${
-                isMobile ? "block" : "hidden group-hover:block"
-              }`}
-            >
-              System
-            </li>
-
-            <NavItem
-              to="/settings"
-              icon={Settings}
-              label="Settings"
-              onClick={handleLinkClick}
-              isMobile={isMobile}
-            />
-            <NavItem
-              to="/support"
-              icon={HelpCircle}
-              label="Support"
               onClick={handleLinkClick}
               isMobile={isMobile}
             />
