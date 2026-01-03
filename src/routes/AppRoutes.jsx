@@ -7,7 +7,7 @@ import Layout from "../layouts/Layout";
 
 // Pages (Implemented)
 import Login from "../pages/Login";
-import Dashboard from "../pages/Dashboard";
+// import Dashboard from "../pages/Dashboard"; // Removed as requested
 import NotFound from "../pages/NotFound";
 import Diamonds from "../pages/admin/Diamonds";
 import Metals from "../pages/admin/Metals";
@@ -35,13 +35,12 @@ const Placeholder = ({ title }) => (
 );
 
 // --- ROUTE CONFIGURATION ---
-// These paths match exactly with the 'to' props in your Sidebar.jsx
 export const appRoutes = [
-  // --- Overview ---
+  // --- Overview (Redirect root to Diamonds) ---
   {
     path: "/",
-    element: <Dashboard />,
-    title: "Dashboard Overview",
+    element: <Navigate to="/diamonds" replace />, // ✅ Redirects immediately
+    title: "Redirect to Inventory",
   },
 
   // --- Catalog ---
@@ -125,6 +124,7 @@ const ProtectedRoute = ({ children }) => {
 
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
+  // If authenticated, go to / which will redirect to /diamonds
   if (isAuthenticated) return <Navigate to="/" replace />;
   return children;
 };
