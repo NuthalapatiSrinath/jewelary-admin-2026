@@ -9,6 +9,7 @@ import Layout from "../layouts/Layout";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import NotFound from "../pages/NotFound";
+import Diamonds from "../pages/admin/Diamonds";
 
 // Placeholder for missing pages (Prevents crashes)
 const Placeholder = ({ title }) => (
@@ -22,6 +23,11 @@ const Placeholder = ({ title }) => (
 export const appRoutes = [
   // Overview
   { path: "/", element: <Dashboard />, title: "Dashboard Overview" },
+  {
+    path: "/inventory/products",
+    element: <Diamonds />,
+    title: "Diamond Inventory",
+  },
 
   // Inventory
   {
