@@ -157,11 +157,11 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
                   label="All Products"
                   onClick={handleLinkClick}
                 />
-                <SubNavItem
+                {/* <SubNavItem
                   to="/categories"
                   label="Categories"
                   onClick={handleLinkClick}
-                />
+                /> */}
               </SubMenu>
             </li>
 
