@@ -16,7 +16,7 @@ const Login = () => {
 
   const [focusedField, setFocusedField] = useState(null);
   const [formData, setFormData] = useState({
-    email: "", // Changed from 'number' to 'email' for your backend
+    email: "",
     password: "",
   });
 
@@ -39,13 +39,20 @@ const Login = () => {
     e.preventDefault();
     if (!formData.email || !formData.password) return;
 
-    // Dispatch the Redux action we created earlier
-    dispatch(loginUser(formData));
+    // --- FIX: Sanitize Input for Mobile ---
+    // 1. Trim whitespace (common in mobile autofill)
+    // 2. Convert email to lowercase (mobile keyboards auto-capitalize)
+    const payload = {
+      email: formData.email.trim().toLowerCase(),
+      password: formData.password,
+    };
+
+    dispatch(loginUser(payload));
   };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-[#0f172a] relative overflow-hidden font-sans">
-      {/* --- CSS FIX FOR AUTOFILL BACKGROUND --- */}
+      {/* ... (CSS styles remain the same) ... */}
       <style>{`
         input:-webkit-autofill,
         input:-webkit-autofill:hover, 
@@ -73,7 +80,7 @@ const Login = () => {
         }
       `}</style>
 
-      {/* Background Effects with Animation */}
+      {/* ... (Background effects remain the same) ... */}
       <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-indigo-600/30 rounded-full blur-[120px] pointer-events-none animate-blob" />
       <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-purple-600/30 rounded-full blur-[120px] pointer-events-none animate-blob animation-delay-2000" />
       <div className="absolute bottom-[20%] left-[20%] w-[400px] h-[400px] bg-pink-600/20 rounded-full blur-[120px] pointer-events-none animate-blob animation-delay-4000" />
@@ -86,7 +93,7 @@ const Login = () => {
       >
         <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl p-8 md:p-10">
           <div className="text-center mb-10">
-            {/* Circular Logo with Animation & Gradient Border */}
+            {/* ... (Logo section remains the same) ... */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
@@ -95,7 +102,6 @@ const Login = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full animate-[spin_4s_linear_infinite] blur-sm opacity-70"></div>
               <div className="relative w-full h-full rounded-full flex items-center justify-center overflow-hidden bg-slate-900 border-2 border-white/20 shadow-lg shadow-indigo-500/25">
-                {/* Replaced Image with Gem Icon for consistency, or use your image tag here */}
                 <Gem className="w-10 h-10 text-indigo-400" />
               </div>
             </motion.div>
@@ -130,6 +136,8 @@ const Login = () => {
                 >
                   <Mail className="w-5 h-5" />
                 </div>
+
+                {/* --- FIX: Added Mobile-Specific Attributes --- */}
                 <input
                   type="email"
                   name="email"
@@ -139,7 +147,10 @@ const Login = () => {
                   onBlur={() => setFocusedField(null)}
                   className="w-full bg-transparent text-white px-4 py-3.5 outline-none placeholder-slate-600"
                   placeholder="admin@luxe.com"
-                  autoComplete="off"
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
                   required
                 />
               </div>
